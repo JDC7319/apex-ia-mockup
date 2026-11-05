@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Calendar, MapPin, Film } from "lucide-react";
+import { Calendar, MapPin, Film, Users, Bitcoin } from "lucide-react";
+import arena from "@/assets/arena-octagon.jpg";
+import { CryptoCheckout } from "@/components/site/CryptoCheckout";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { SiteLayout, PageTitle } from "@/components/site/Layout";
@@ -34,9 +36,9 @@ const events = [
 ];
 
 const tiers = [
-  { id: "ringside", name: "Ringside", price: 890, note: "Rows A–C · cage-side view" },
-  { id: "vipbox", name: "Drive-In VIP Box", price: 320, note: "Private car bay · concierge snacks · per vehicle" },
-  { id: "general", name: "General Admission", price: 89, note: "Upper bowl / open lawn" },
+  { id: "ringside", name: "Ringside", price: 150, note: "Rows A–C · cage-side view" },
+  { id: "vipbox", name: "Drive-In VIP Box", price: 100, note: "Private car bay · concierge snacks · per vehicle" },
+  { id: "general", name: "General Admission", price: 50, note: "Upper bowl / open lawn" },
 ];
 
 function Events() {
@@ -45,12 +47,45 @@ function Events() {
   const [venue, setVenue] = useState(event.venues[0]!);
   const [tier, setTier] = useState("general");
   const [qty, setQty] = useState(2);
+  const [zone, setZone] = useState<"ringside" | "vip" | "general">("ringside");
+  const [crypto, setCrypto] = useState(false);
   const t = tiers.find((x) => x.id === tier)!;
   const v = venues.find((x) => x.id === venue)!;
   const pick = (id: string) => { const e = events.find((x) => x.id === id)!; setEv(id); setVenue(e.venues[0]!); };
   return (
     <SiteLayout>
       <PageTitle eyebrow="Ticket Office" title="Events & Tickets" sub="Pick a fight night, choose your venue — arena or Monster's Drive-In big-screen — and check out." />
+      <section className="mx-auto max-w-7xl px-4 pt-12">
+        <div className="relative overflow-hidden border border-border bg-background">
+          <img src={arena} alt="APEX octagon arena under spotlights" width={1600} height={912} className="h-[420px] w-full object-cover opacity-80" />
+          <div className="bg-fade absolute inset-0" />
+          <div className="absolute inset-x-0 bottom-0 grid gap-6 p-6 md:grid-cols-[1fr_auto] md:items-end">
+            <div>
+              <div className="text-xs font-bold uppercase tracking-[0.25em] text-primary">Arena Showcase</div>
+              <h2 className="font-display text-5xl font-bold uppercase md:text-6xl">APEX Arena 01</h2>
+              <div className="text-lg text-muted-foreground">Monster's Cinema Drive-In Grounds</div>
+              <div className="mt-3 flex flex-wrap gap-4 text-sm">
+                <span className="flex items-center gap-1"><Users className="h-4 w-4 text-primary" />12,500 capacity</span>
+                <span>· 600 Ringside</span><span>· 240 VIP car bays</span><span>· 11,660 General</span>
+              </div>
+            </div>
+            <div className="border border-border bg-card/90 p-4 backdrop-blur">
+              <div className="mb-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">Venue Map</div>
+              <div className="mb-3 flex gap-1">
+                {(["ringside", "vip", "general"] as const).map((z) => (
+                  <button key={z} onClick={() => setZone(z)} className={`border px-3 py-1 text-xs font-bold uppercase tracking-wider ${zone === z ? "border-accent bg-primary text-primary-foreground" : "border-border hover:border-muted-foreground"}`}>{z === "vip" ? "VIP" : z === "general" ? "General Access" : "Ringside"}</button>
+                ))}
+              </div>
+              <svg viewBox="0 0 200 140" className="h-36 w-56">
+                <rect x="10" y="10" width="180" height="120" fill="none" className={zone === "general" ? "fill-primary/30 stroke-primary" : "stroke-border"} strokeWidth="2" />
+                <rect x="40" y="30" width="120" height="80" className={zone === "vip" ? "fill-primary/40 stroke-primary" : "fill-background stroke-border"} strokeWidth="2" />
+                <rect x="65" y="45" width="70" height="50" className={zone === "ringside" ? "fill-primary/60 stroke-primary" : "fill-background stroke-border"} strokeWidth="2" />
+                <polygon points="90,55 110,55 120,65 120,75 110,85 90,85 80,75 80,65" className="fill-foreground" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
       <section className="mx-auto grid max-w-7xl gap-8 px-4 py-12 lg:grid-cols-[3fr_2fr]">
         <div>
           <h2 className="mb-4 font-display text-3xl font-semibold uppercase">Upcoming Events</h2>
@@ -83,10 +118,15 @@ function Events() {
           <div className="mt-5 text-xs font-bold uppercase tracking-widest text-muted-foreground">Ticket Tier</div>
           <div className="mt-2 grid gap-2">
             {tiers.map((x) => (
-              <button key={x.id} onClick={() => setTier(x.id)} className={`flex items-center justify-between border p-3 text-left ${tier === x.id ? "border-accent bg-red-dark/40" : "border-border hover:border-muted-foreground"}`}>
-                <div><div className="font-bold uppercase tracking-wider">{x.name}</div><div className="text-xs text-muted-foreground">{x.note}</div></div>
-                <div className="font-display text-3xl font-bold">${x.price}</div>
-              </button>
+              <div key={x.id} className={`border ${tier === x.id ? "border-accent bg-red-dark/40" : "border-border"}`}>
+                <button onClick={() => setTier(x.id)} className="flex w-full items-center justify-between p-3 text-left">
+                  <div><div className="font-bold uppercase tracking-wider">{x.name}</div><div className="text-xs text-muted-foreground">{x.note}</div></div>
+                  <div className="font-display text-3xl font-bold">${x.price} <span className="text-sm text-muted-foreground">USD</span></div>
+                </button>
+                <button onClick={() => { setTier(x.id); setCrypto(true); }} className="flex w-full items-center justify-center gap-2 border-t border-border bg-primary py-2 text-xs font-bold uppercase tracking-wider text-primary-foreground hover:bg-accent">
+                  <Bitcoin className="h-4 w-4" />Pay with Crypto (Live CoinGecko FX)
+                </button>
+              </div>
             ))}
           </div>
           <div className="mt-4 flex items-center justify-between text-sm">
@@ -103,6 +143,7 @@ function Events() {
           </Button>
         </div>
       </section>
+      <CryptoCheckout open={crypto} onOpenChange={setCrypto} tier={t.name} price={t.price} qty={qty} venue={`${v.name}, ${v.city}`} event={event.title} />
     </SiteLayout>
   );
 }
