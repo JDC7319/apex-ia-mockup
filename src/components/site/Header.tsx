@@ -18,8 +18,11 @@ export function Header() {
         </Link>
         <div className="hidden gap-8 text-sm font-semibold uppercase tracking-widest text-muted-foreground md:flex">
           {nav.map((n) => (
-            <Link key={n.label} to={n.to} hash={n.hash} className="transition-colors hover:text-foreground"
-              activeProps={n.hash ? undefined : { className: "text-foreground" }}>{n.label}</Link>
+            n.hash ? (
+              <Link key={n.label} to={n.to} hash={n.hash} className="transition-colors hover:text-foreground">{n.label}</Link>
+            ) : (
+              <Link key={n.label} to={n.to} className="transition-colors hover:text-foreground" activeProps={{ className: "text-foreground" }}>{n.label}</Link>
+            )
           ))}
         </div>
         <Button variant="fight" asChild><Link to="/events">Buy Tickets</Link></Button>
