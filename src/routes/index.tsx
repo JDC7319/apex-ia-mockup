@@ -1,23 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Play, Eye, MapPin, Calendar, Ticket, Instagram, Youtube, Twitter, Check, Activity } from "lucide-react";
+import { Play, Eye, MapPin, Calendar, Ticket, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Toaster } from "@/components/ui/sonner";
+import { SiteLayout } from "@/components/site/Layout";
+import { fighters } from "@/components/site/data";
 import hero from "@/assets/hero-robot.jpg";
-import titan from "@/assets/fighter-titan.jpg";
-import falcon from "@/assets/fighter-falcon.jpg";
 import ko from "@/assets/highlight-ko.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "URKL — Real Humanoid Combat League | Tickets & Highlights" },
-      { name: "description", content: "Ultimate Robot Knock-out Legend. Watch T800 humanoid robots fight live. Buy tickets for White Eagle vs. Steel Titan and stream K.O. highlights." },
-      { property: "og:title", content: "URKL — Real Humanoid Combat League" },
+      { title: "APEX — Real Humanoid Combat League | Tickets & Highlights" },
+      { name: "description", content: "APEX, presented by Monster's Cinema. Watch T800 humanoid robots fight live. Buy tickets for White Eagle vs. Steel Titan and stream K.O. highlights." },
+      { property: "og:title", content: "APEX — Real Humanoid Combat League" },
       { property: "og:description", content: "White Eagle vs. Steel Titan. Get tickets and stream the knockouts." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Index,
@@ -31,15 +31,9 @@ const zones = [
   { id: "general", name: "General", price: 89, note: "Upper bowl seating" },
 ];
 
-const fighters = [
-  { name: "White Eagle", unit: "T800-WE01", cls: "Heavyweight", img: hero, record: "14-1-0", weight: 78, torque: 450, velocity: 9.4, kos: 11, style: "Counter-striker" },
-  { name: "Steel Titan", unit: "T800-ST03", cls: "Super Heavyweight", img: titan, record: "12-2-0", weight: 92, torque: 520, velocity: 8.1, kos: 10, style: "Pressure brawler" },
-  { name: "Red Falcon", unit: "T800-RF07", cls: "Middleweight", img: falcon, record: "9-0-0", weight: 64, torque: 380, velocity: 10.6, kos: 6, style: "Kick specialist" },
-];
-
 const highlights = [
   { title: "White Eagle flatlines Titan-II in R2", dur: "0:48", views: "2.4M", pos: "object-left", live: false },
-  { title: "URKL 07: Full main event replay", dur: "34:12", views: "1.1M", pos: "object-center", live: false },
+  { title: "APEX 07: Full main event replay", dur: "34:12", views: "1.1M", pos: "object-center", live: false },
   { title: "Red Falcon spinning heel KO", dur: "0:31", views: "3.8M", pos: "object-right", live: false },
   { title: "Weigh-ins & actuator calibration", dur: "LIVE", views: "18K", pos: "object-top", live: true },
 ];
@@ -58,31 +52,12 @@ function useCountdown(target: Date) {
 
 function Index() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Toaster />
-      <Header />
+    <SiteLayout>
       <Hero />
-      <Matchup />
       <Fighters />
+      <Matchup />
       <Highlights />
-      <Footer />
-    </div>
-  );
-}
-
-function Header() {
-  return (
-    <header className="fixed inset-x-0 top-4 z-50 px-4">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between rounded-sm border border-border bg-background/70 px-5 py-3 backdrop-blur-xl">
-        <a href="#top" className="font-display text-3xl font-bold tracking-wider">URKL<span className="text-primary">.</span></a>
-        <div className="hidden gap-8 text-sm font-semibold uppercase tracking-widest text-muted-foreground md:flex">
-          {[["Fight Card", "#fight-card"], ["T800 Athletes", "#athletes"], ["Highlights", "#highlights"], ["Venues", "#venues"]].map(([l, h]) => (
-            <a key={h} href={h} className="transition-colors hover:text-foreground">{l}</a>
-          ))}
-        </div>
-        <Button variant="fight" asChild><a href="#tickets">Buy Tickets</a></Button>
-      </nav>
-    </header>
+    </SiteLayout>
   );
 }
 
@@ -96,7 +71,10 @@ function Hero() {
       <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 pb-16 lg:grid-cols-2">
         <div>
           <div className="mb-5 inline-flex items-center gap-2 rounded-sm bg-primary px-2.5 py-1 text-xs font-bold uppercase tracking-widest text-primary-foreground">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary-foreground" /> URKL 08 · On Sale Now
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary-foreground" /> APEX 08 · On Sale Now
+          </div>
+          <div className="mb-5 ml-2 inline-flex border border-border bg-card/70 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-platinum">
+            Official Host &amp; Presenting Sponsor: <span className="ml-1 text-primary">Monster's Cinema Driver-In Arena</span>
           </div>
           <h1 className="font-display text-7xl font-bold uppercase md:text-8xl xl:text-9xl">
             Real Humanoid<br /><span className="text-primary">Combat</span> League
@@ -296,39 +274,3 @@ function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
   );
 }
 
-function Footer() {
-  const [email, setEmail] = useState("");
-  const [done, setDone] = useState(false);
-  return (
-    <footer className="border-t border-border bg-card">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-2">
-        <div>
-          <div className="font-display text-5xl font-bold">URKL<span className="text-primary">.</span></div>
-          <p className="mt-2 max-w-sm text-muted-foreground">Ultimate Robot Knock-out Legend. Real humanoid engineering. Real knockouts.</p>
-          <div className="mt-5 flex gap-3">
-            {[Instagram, Youtube, Twitter].map((I, i) => (
-              <a key={i} href="#" aria-label="Social" className="grid h-10 w-10 place-items-center border border-border transition-colors hover:border-accent hover:text-primary"><I className="h-4 w-4" /></a>
-            ))}
-          </div>
-        </div>
-        <div>
-          <h3 className="font-display text-3xl font-semibold uppercase">Get Fight Alerts</h3>
-          <p className="text-sm text-muted-foreground">Presale codes, weigh-in streams and K.O. clips first.</p>
-          <form className="mt-4 flex gap-2" onSubmit={(e) => { e.preventDefault(); if (/\S+@\S+\.\S+/.test(email)) { setDone(true); setEmail(""); } else toast.error("Enter a valid email"); }}>
-            <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@email.com" className="h-12 rounded-sm bg-background" />
-            <Button variant="fight" className="h-12 px-6">{done ? <Check /> : "Subscribe"}</Button>
-          </form>
-          {done && <p className="mt-2 text-sm text-primary">You're on the list.</p>}
-        </div>
-      </div>
-      <div className="border-t border-border">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-6 px-4 py-6">
-          <div className="flex flex-wrap gap-8 font-display text-2xl uppercase tracking-widest text-muted-foreground/60">
-            {["EngineAI", "Servotek", "Kinetik", "ArenaOne", "Voltra"].map((s) => <span key={s}>{s}</span>)}
-          </div>
-          <p className="text-xs text-muted-foreground">© 2026 URKL. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
-  );
-}
