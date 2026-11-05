@@ -33,7 +33,7 @@ const zones = [
 
 const highlights = [
   { title: "White Eagle flatlines Titan-II in R2", dur: "0:48", views: "2.4M", pos: "object-left", live: false },
-  { title: "URKL 07: Full main event replay", dur: "34:12", views: "1.1M", pos: "object-center", live: false },
+  { title: "APEX 07: Full main event replay", dur: "34:12", views: "1.1M", pos: "object-center", live: false },
   { title: "Red Falcon spinning heel KO", dur: "0:31", views: "3.8M", pos: "object-right", live: false },
   { title: "Weigh-ins & actuator calibration", dur: "LIVE", views: "18K", pos: "object-top", live: true },
 ];
