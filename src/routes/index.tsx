@@ -178,7 +178,7 @@ function Bar({ a, b, label, unit }: { a: number; b: number; label: string; unit:
 }
 
 function Matchup() {
-  const [a, b] = fighters;
+  const a = fighters[0]!, b = fighters[1]!;
   return (
     <section id="fight-card" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-20">
       <SectionTitle eyebrow="Main Event · 5 Rounds" title="Fight Card" />
